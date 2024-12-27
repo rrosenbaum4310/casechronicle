@@ -1,5 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { FileText, Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const templates = [
   { id: 1, name: "Motion to Dismiss", category: "Litigation" },
@@ -9,8 +10,13 @@ const templates = [
 
 const DocumentTemplates = () => {
   return (
-    <div className="space-y-4">
-      <h2 className="text-xl font-semibold mb-4">Document Templates</h2>
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h2 className="text-xl font-semibold text-legal-primary">Templates</h2>
+        <Button variant="outline" size="sm">
+          View All
+        </Button>
+      </div>
       <div className="grid gap-4">
         {templates.map((template) => (
           <Card key={template.id} className="p-4 hover:shadow-lg transition-shadow cursor-pointer">
