@@ -4,17 +4,50 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import CaseView from "./CaseView";
 
 const cases = [
-  { id: 1, title: "Smith vs. Johnson", type: "Civil Litigation", date: "2024-02-20", status: "Active", priority: "High" },
-  { id: 2, title: "Estate of Williams", type: "Probate", date: "2024-02-18", status: "Pending", priority: "Medium" },
-  { id: 3, title: "Corporate Merger A", type: "Corporate", date: "2024-02-15", status: "Active", priority: "High" },
-  { id: 4, title: "Brown Family Trust", type: "Trust", date: "2024-02-14", status: "Review", priority: "Low" },
-  { id: 5, title: "Davidson LLC", type: "Business", date: "2024-02-12", status: "Active", priority: "Medium" },
+  {
+    id: 1,
+    title: "Smith vs. Johnson",
+    type: "Civil Litigation",
+    date: "2024-02-20",
+    status: "Active",
+    priority: "High",
+    client: "John Smith",
+    description: "Civil dispute regarding property boundaries and easement rights. The case involves multiple survey reports and historical documentation.",
+    nextHearing: "2024-03-15",
+    assignedTo: "Sarah Parker"
+  },
+  {
+    id: 2,
+    title: "Estate of Williams",
+    type: "Probate",
+    date: "2024-02-18",
+    status: "Pending",
+    priority: "Medium",
+    client: "Williams Family",
+    description: "Probate case involving complex estate distribution and multiple beneficiaries. Includes real estate and business assets.",
+    nextHearing: "2024-03-20",
+    assignedTo: "Michael Chen"
+  },
+  {
+    id: 3,
+    title: "Corporate Merger A",
+    type: "Corporate",
+    date: "2024-02-15",
+    status: "Active",
+    priority: "High",
+    client: "Tech Corp Inc.",
+    description: "Major corporate merger requiring due diligence and regulatory compliance review. Multiple stakeholders involved.",
+    nextHearing: "N/A",
+    assignedTo: "David Wilson"
+  }
 ];
 
 const CaseList = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCase, setSelectedCase] = useState<number | null>(null);
   const navigate = useNavigate();
 
   const filteredCases = cases.filter(
@@ -25,6 +58,10 @@ const CaseList = () => {
 
   const handleNewCase = () => {
     navigate("/new-case");
+  };
+
+  const handleCaseClick = (caseId: number) => {
+    setSelectedCase(selectedCase === caseId ? null : caseId);
   };
 
   return (
@@ -53,32 +90,43 @@ const CaseList = () => {
 
       <div className="grid gap-4">
         {filteredCases.map((case_) => (
-          <Card key={case_.id} className="p-4 hover:shadow-lg transition-shadow cursor-pointer">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <FileText className="w-5 h-5 text-legal-primary" />
-                <div>
-                  <h3 className="font-medium text-lg">{case_.title}</h3>
-                  <div className="flex gap-2 text-sm text-gray-500">
-                    <span>{case_.type}</span>
-                    <span>•</span>
-                    <span>{case_.date}</span>
-                    <span>•</span>
-                    <span className={`font-medium ${
-                      case_.priority === "High" ? "text-red-500" :
-                      case_.priority === "Medium" ? "text-yellow-500" :
-                      "text-green-500"
-                    }`}>
-                      {case_.priority}
-                    </span>
-                    <span>•</span>
-                    <span className="text-legal-primary font-medium">{case_.status}</span>
+          <div key={case_.id} className="space-y-4">
+            <Card 
+              className="p-4 hover:shadow-lg transition-shadow cursor-pointer"
+              onClick={() => handleCaseClick(case_.id)}
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <FileText className="w-5 h-5 text-legal-primary" />
+                  <div>
+                    <h3 className="font-medium text-lg">{case_.title}</h3>
+                    <div className="flex gap-2 text-sm text-gray-500">
+                      <span>{case_.type}</span>
+                      <span>•</span>
+                      <span>{case_.date}</span>
+                      <span>•</span>
+                      <span className={`font-medium ${
+                        case_.priority === "High" ? "text-red-500" :
+                        case_.priority === "Medium" ? "text-yellow-500" :
+                        "text-green-500"
+                      }`}>
+                        {case_.priority}
+                      </span>
+                      <span>•</span>
+                      <span className="text-legal-primary font-medium">{case_.status}</span>
+                    </div>
                   </div>
                 </div>
+                <ArrowRight className={`w-5 h-5 text-gray-400 transform transition-transform ${
+                  selectedCase === case_.id ? "rotate-90" : ""
+                }`} />
               </div>
-              <ArrowRight className="w-5 h-5 text-gray-400" />
-            </div>
-          </Card>
+            </Card>
+            
+            {selectedCase === case_.id && (
+              <CaseView caseDetails={case_} />
+            )}
+          </div>
         ))}
       </div>
     </div>
