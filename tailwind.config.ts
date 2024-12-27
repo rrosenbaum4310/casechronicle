@@ -58,6 +58,9 @@ export default {
           foreground: "hsl(var(--card-foreground))",
         },
       },
+      borderColor: {
+        DEFAULT: "hsl(var(--border))",
+      },
       animation: {
         "fade-in": "fadeIn 0.5s ease-in-out",
       },
